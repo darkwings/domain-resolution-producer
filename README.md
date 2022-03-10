@@ -6,7 +6,7 @@
 
 ## Commands
 
-    curl -X POST http://localhost:8080/bulk/users/cmpny_users/1000
+    curl -X POST http://localhost:8080/bulk/users/cmpny_users/999
 
     curl -X POST http://localhost:8080/bulk/activity/cmpny_activity/_bulk_n_/_pause_
 
