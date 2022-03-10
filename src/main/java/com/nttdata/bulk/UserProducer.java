@@ -37,7 +37,7 @@ public class UserProducer {
             return;
         }
 
-        if (howMany >= 1000) {
+        if (howMany > 1000) {
             throw new RuntimeException("Cannot create more than 1000 users");
         }
 
