@@ -1,0 +1,25 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "favoriteNumber",
+      "type": [
+        "int",
+        "null"
+      ]
+    },
+    {
+      "name": "favoriteColor",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  ],
+  "name": "User",
+  "namespace": "com.nttdata.messages",
+  "type": "record"
+}
