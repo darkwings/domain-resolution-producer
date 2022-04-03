@@ -108,6 +108,9 @@ public class ActivityProducer {
             Properties props = new Properties();
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             props.put(ProducerConfig.CLIENT_ID_CONFIG, producerId);
+            props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
+            props.put(ProducerConfig.LINGER_MS_CONFIG, 1000);
+            props.put(ProducerConfig.BATCH_SIZE_CONFIG, 32);
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             jsonProducer = new KafkaProducer<>(props);
