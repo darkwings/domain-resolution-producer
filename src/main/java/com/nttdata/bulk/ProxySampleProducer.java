@@ -105,10 +105,13 @@ public class ProxySampleProducer {
             props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
             // props.put(ProducerConfig.CLIENT_ID_CONFIG, "simple-" + UUID.randomUUID().toString());
             // props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
-            // props.put(ProducerConfig.LINGER_MS_CONFIG, 1000);
+            props.put(ProducerConfig.LINGER_MS_CONFIG, 500);
             // props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1);
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+            props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "lz4");
+
             c.decorateProducer(props);
             jsonProducer = new KafkaProducer<>(props);
         }

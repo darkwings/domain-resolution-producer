@@ -33,10 +33,12 @@ To produce 900.000 mess/min (54.000.000 mess/h, 15.000 mess/sec)
 
 ## PROXY
 
-Just to smile
+TIM Users
+
+    curl -X POST http://localhost:8080/proxy/users/ldap-enrich-data
+
+To send data
 
     curl -X POST http://localhost:8080/bulk/proxy/ldap-enrich-in/1/100/1
-
-To produce 900.000 mess/min (54.000.000 mess/h, 15.000 mess/sec)
 
     curl -X POST http://localhost:8080/bulk/proxy/ldap-enrich-in/15/10/5
