@@ -2,7 +2,7 @@
   "logType": "proxy",
   "correlationId": "%CORRELATION_ID%",
   "MCAFEE_PROXY": {
-    "application_name": "",
+    "application_name": "%APPLICATION_NAME%",
     "reputation_level": "Minimal Risk",
     "block_result": 0,
     "virus_name": "",
