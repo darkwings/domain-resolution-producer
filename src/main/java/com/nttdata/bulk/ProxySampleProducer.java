@@ -112,8 +112,7 @@ public class ProxySampleProducer {
 
             props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "lz4");
 
-            c.decorateProducer(props);
-            jsonProducer = new KafkaProducer<>(props);
+            jsonProducer = new KafkaProducer<>(c.decorateProducer(props));
         }
 
         @Override

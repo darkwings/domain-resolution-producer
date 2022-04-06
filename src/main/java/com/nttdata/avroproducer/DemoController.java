@@ -1,6 +1,8 @@
 package com.nttdata.avroproducer;
 
+import com.nttdata.bulk.EncryptionConfig;
 import com.nttdata.messages.User;
+import lombok.val;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -73,8 +75,8 @@ public class DemoController {
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "JsonProducer");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        jsonProducer = new KafkaProducer<>(props);
-
+        val c = EncryptionConfig.createFromSystemProp();
+        jsonProducer = new KafkaProducer<>(c.decorateProducer(props));
 
         props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -84,7 +86,7 @@ public class DemoController {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         props.put("schema.registry.url", schemaRegistryUrl);
-        avroProducer = new KafkaProducer<>(props);
+        avroProducer = new KafkaProducer<>(c.decorateProducer(props));
     }
 
     @PostMapping("/publish/avro/{n}")

@@ -56,9 +56,8 @@ public class ProxyUserProducer {
         //props.put(ProducerConfig.CLIENT_ID_CONFIG, producerId);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        c.decorateProducer(props);
 
-        producer = new KafkaProducer<>(props);
+        producer = new KafkaProducer<>(c.decorateProducer(props));
     }
 
 

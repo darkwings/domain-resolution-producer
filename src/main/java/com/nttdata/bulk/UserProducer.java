@@ -2,6 +2,7 @@ package com.nttdata.bulk;
 
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -70,7 +71,8 @@ public class UserProducer {
             props.put(ProducerConfig.CLIENT_ID_CONFIG, producerId);
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-            jsonProducer = new KafkaProducer<>(props);
+            val c = EncryptionConfig.createFromSystemProp();
+            jsonProducer = new KafkaProducer<>(c.decorateProducer(props));
         }
 
         @Override
