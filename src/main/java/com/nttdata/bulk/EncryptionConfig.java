@@ -101,7 +101,7 @@ public class EncryptionConfig {
     }
 
     private void populateMap(Map<Object, Object> p) {
-        p.put(SECURITY_PROTOCOL_CONFIG, securityProtocol != null ? securityProtocol : SecurityProtocol.SSL.name);
+        p.put(SECURITY_PROTOCOL_CONFIG, securityProtocol != null ? securityProtocol : SecurityProtocol.PLAINTEXT.name);
         ofNullable(sslKeyPassword).ifPresent(prop -> p.put(SSL_KEY_PASSWORD_CONFIG, prop));
         ofNullable(sslKeystoreCertificateChain).ifPresent(prop -> p.put(SSL_KEYSTORE_CERTIFICATE_CHAIN_CONFIG, prop));
         ofNullable(sslKeystoreKey).ifPresent(prop -> p.put(SSL_KEYSTORE_KEY_CONFIG, prop));

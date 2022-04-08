@@ -42,7 +42,7 @@ To send data (Selector)
 
 To send data (LDAP Enricher)
 
-    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/1/100/1
+    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/1/1000/1
 
     curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/15/10/5
 
