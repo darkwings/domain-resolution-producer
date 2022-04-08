@@ -35,11 +35,16 @@ TIM Users
 
     curl -X POST http://localhost:8080/proxy/users/ldap-enrich-data
 
-To send data
+To send data (Selector)
+ 
+    curl -X POST http://localhost:8080/bulk/proxy/selector/logstash-out/1/100/1
 
-    curl -X POST http://localhost:8080/bulk/proxy/ldap-enrich-in/1/100/1
 
-    curl -X POST http://localhost:8080/bulk/proxy/ldap-enrich-in/15/10/5
+To send data (LDAP Enricher)
+
+    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/1/100/1
+
+    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/15/10/5
 
 
 ## Commands

@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 @Component
 @RestController
 @Slf4j
-public class ProxySampleProducer {
+public class ProxySelectorProducer {
 
     String json;
 
@@ -46,15 +46,15 @@ public class ProxySampleProducer {
     private final AtomicBoolean runningLoop = new AtomicBoolean(false);
 
     @SneakyThrows
-    public ProxySampleProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
-        URL url = Resources.getResource("proxy-sample.json");
+    public ProxySelectorProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
+        URL url = Resources.getResource("proxy-selector-sample.json");
         this.json = Resources.toString(url, Charset.defaultCharset());
         url = Resources.getResource("users-telecomitalia.txt");
         uids = Resources.readLines(url, Charset.defaultCharset());
         this.bootstrapServers = bootstrapServers;
     }
 
-    @PostMapping("/bulk/proxy/{topic}/{howMany}/{period}/{n}")
+    @PostMapping("/bulk/proxy/selector/{topic}/{howMany}/{period}/{n}")
     private String proxies(@PathVariable("topic") String topic,
                            @PathVariable("howMany") int howMany,
                            @PathVariable("period") long period,
@@ -71,7 +71,7 @@ public class ProxySampleProducer {
         return "OK\n";
     }
 
-    @PostMapping("/bulk/proxy/_stop")
+    @PostMapping("/bulk/proxy/selector/_stop")
     public String stopLoop() {
         runningLoop.set(false);
         return "STOPPED\n";
@@ -110,7 +110,7 @@ public class ProxySampleProducer {
             props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
             props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-            props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "lz4");
+            // props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "lz4");
 
             jsonProducer = new KafkaProducer<>(c.decorateProducer(props));
         }
@@ -133,7 +133,7 @@ public class ProxySampleProducer {
                     IntStream.range(0, singleBulkSize).forEach(i -> {
                         val userId = uids.get(r.nextInt(uids.size()));
                         val j = json.replaceAll("%USER_ID%", userId)
-                                .replaceAll("%CORRELATION_ID%", UUID.randomUUID().toString())
+                                //.replaceAll("%CORRELATION_ID%", UUID.randomUUID().toString())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
                         val record = new ProducerRecord<>(topic, userId, j);
                         sent.incrementAndGet();
