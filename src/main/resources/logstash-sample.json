@@ -1,0 +1,77 @@
+{
+  "SHIMMIA": {
+    "hostname": "telmcf007rm001",
+    "timestamp": "2022-03-18_23-59",
+    "internalname": "1...",
+    "compressname": "Griffon-NavigazioneInternet.STDAPPL.12.3.telmcf007rm001.2022-03-18_23-59.BROWSING.log.gz",
+    "app": "Griffon-NavigazioneInternet",
+    "archivename": "Griffon-NavigazioneInternet.TELMCF007RM001.STDAPPL_BROWSING.L1.LINUX.AS.2022-03-19_00-23.9.-4.-4.0.tar.Z",
+    "logtype": "STDAPPL"
+  },
+  "event": {
+    "kind": "event",
+    "outcome": "success",
+    "created": "2022-03-19T06:34:59.150Z",
+    "category": "web"
+  },
+  "logType": "proxy",
+  "http": {
+    "response": {
+      "mime_type": "",
+      "status_code": 200
+    },
+    "version": "1.1",
+    "request": {
+      "method": "CONNECT"
+    }
+  },
+  "user_agent": {
+    "original": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
+  },
+  "destination": {
+    "address": "13.107.6.158",
+    "ip": "13.107.6.158",
+    "bytes": "8366"
+  },
+  "user": {
+    "name": "%USER_ID%",
+    "hash": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "id": "%USER_ID%"
+  },
+  "source": {
+    "address": "10.141.132.183",
+    "ip": "10.141.132.183",
+    "bytes": "7746"
+  },
+  "@version": "1",
+  "MCAFEE_PROXY": {
+    "virus_name": "",
+    "hash": {
+      "md5": "",
+      "sha256": " "
+    },
+    "block_result": 0,
+    "application_name": "033b5ee3-3a72-407c-a46c-225d6a790d92",
+    "categories": [
+      "Search Engines"
+    ],
+    "reputation_level": "Minimal Risk"
+  },
+  "message": "[18/Mar/2022:16:19:30 +0100] \"00918119\" 10.141.132.183 200 \"CONNECT business.bing.com:443 HTTP/1.1\" \"Search Engines\" \"Minimal Risk\" \"\" 8366 7746 \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39\" \"\" \"0\" \"\" \"\" \"13.107.6.158\" \" \"",
+  "url": {
+    "port": "443",
+    "domain": "business.bing.com",
+    "original": "business.bing.com:443"
+  },
+  "host": "0:0:0:0:0:0:0:1",
+  "headers": {
+    "content_type": "application/json",
+    "http_accept": "*/*",
+    "connection": "keep-alive",
+    "http_host": "localhost:9500",
+    "accept_encoding": "gzip, deflate, br",
+    "request_method": "POST",
+    "http_version": "HTTP/1.1"
+  },
+  "@timestamp": "%TSTAMP%"
+}

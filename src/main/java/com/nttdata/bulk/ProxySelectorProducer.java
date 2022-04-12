@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -47,7 +48,7 @@ public class ProxySelectorProducer {
 
     @SneakyThrows
     public ProxySelectorProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
-        URL url = Resources.getResource("proxy-selector-sample.json");
+        URL url = Resources.getResource("logstash-sample.json");
         this.json = Resources.toString(url, Charset.defaultCharset());
         url = Resources.getResource("users-telecomitalia.txt");
         uids = Resources.readLines(url, Charset.defaultCharset());
@@ -133,7 +134,7 @@ public class ProxySelectorProducer {
                     IntStream.range(0, singleBulkSize).forEach(i -> {
                         val userId = uids.get(r.nextInt(uids.size()));
                         val j = json.replaceAll("%USER_ID%", userId)
-                                //.replaceAll("%CORRELATION_ID%", UUID.randomUUID().toString())
+                                .replaceAll("%TSTAMP%", Instant.now().toString())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
                         val record = new ProducerRecord<>(topic, userId, j);
                         sent.incrementAndGet();

@@ -33,18 +33,20 @@ Where `ssl.properties` is
 
 TIM Users
 
-    curl -X POST http://localhost:8080/proxy/users/ldap-enrich-data
+    curl -X POST http://localhost:8080/proxy/users/ldap-enricher-data
 
 To send data (Selector)
  
     curl -X POST http://localhost:8080/bulk/proxy/selector/logstash-out/1/100/1
 
+    curl -X POST http://localhost:8080/bulk/proxy/selector/logstash-out/10/100/1
+
 
 To send data (LDAP Enricher)
 
-    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/1/1000/1
+    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enricher-in/1/1000/1
 
-    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enrich-in/15/10/5
+    curl -X POST http://localhost:8080/bulk/proxy/ldap/ldap-enricher-in/15/10/5
 
 
 ## Commands
