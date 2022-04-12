@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 @Component
@@ -59,7 +61,8 @@ public class ProxySelectorProducer {
     private String proxies(@PathVariable("topic") String topic,
                            @PathVariable("howMany") int howMany,
                            @PathVariable("period") long period,
-                           @PathVariable("n") int n) {
+                           @PathVariable("n") int n,
+                           @RequestParam(value = "factor", defaultValue = "2") int factor) {
         if (runningLoop.get()) {
             return "ALREADY RUNNING\n";
         }
@@ -68,7 +71,7 @@ public class ProxySelectorProducer {
 
         IntStream.range(0, n)
                 .forEach(i -> service.submit(new SingleProducer(bootstrapServers,
-                        runningLoop, uids, howMany, period, json, topic, i)));
+                        runningLoop, uids, howMany, period, json, topic, i, factor)));
         return "OK\n";
     }
 
@@ -89,9 +92,11 @@ public class ProxySelectorProducer {
         String topic;
         String producerId;
 
+        int factor;
+
         public SingleProducer(String bootstrapServers, AtomicBoolean running,
                               List<String> uids, Integer singleBulkSize,
-                              Long delay, String json, String topic, int num) {
+                              Long delay, String json, String topic, int num, int factor) {
             producerId = "proxy-producer-" + num;
             this.running = running;
             this.uids = uids;
@@ -99,6 +104,7 @@ public class ProxySelectorProducer {
             this.delay = delay;
             this.json = json;
             this.topic = topic;
+            this.factor = factor;
 
             val c = EncryptionConfig.createFromSystemProp();
 
@@ -118,6 +124,7 @@ public class ProxySelectorProducer {
 
         @Override
         public void run() {
+            AtomicLong counter = new AtomicLong(0);
             Timer timer = new Timer();
             AtomicInteger sent = new AtomicInteger(0);
             log.info("Producer {} is starting", producerId);
@@ -131,8 +138,9 @@ public class ProxySelectorProducer {
             try {
                 while (running.get()) {
                     val r = new Random();
+                    val v = counter.incrementAndGet();
                     IntStream.range(0, singleBulkSize).forEach(i -> {
-                        val userId = uids.get(r.nextInt(uids.size()));
+                        val userId = v % factor == 0 ? UUID.randomUUID().toString() : uids.get(r.nextInt(uids.size()));
                         val j = json.replaceAll("%USER_ID%", userId)
                                 .replaceAll("%TSTAMP%", Instant.now().toString())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
