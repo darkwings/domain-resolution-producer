@@ -37,6 +37,7 @@ import java.util.stream.IntStream;
 public class ProxyLdapProducer {
 
     String json;
+    String jsonSkip;
 
     Producer<String, String> jsonProducer;
 
@@ -51,6 +52,8 @@ public class ProxyLdapProducer {
     public ProxyLdapProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
         URL url = Resources.getResource("proxy-sample.json");
         this.json = Resources.toString(url, Charset.defaultCharset());
+        url = Resources.getResource("proxy-sample-skip.json");
+        this.jsonSkip = Resources.toString(url, Charset.defaultCharset());
         url = Resources.getResource("users-telecomitalia.txt");
         uids = Resources.readLines(url, Charset.defaultCharset());
         this.bootstrapServers = bootstrapServers;
@@ -70,7 +73,7 @@ public class ProxyLdapProducer {
 
         IntStream.range(0, n)
                 .forEach(i -> service.submit(new SingleProducer(bootstrapServers,
-                        runningLoop, uids, howMany, period, json, topic, i, factor)));
+                        runningLoop, uids, howMany, period, json, jsonSkip, topic, i, factor)));
         return "OK\n";
     }
 
@@ -88,6 +91,7 @@ public class ProxyLdapProducer {
         Integer singleBulkSize;
         Long delay;
         String json;
+        String jsonSkip;
         String topic;
         String producerId;
 
@@ -95,7 +99,7 @@ public class ProxyLdapProducer {
 
         public SingleProducer(String bootstrapServers, AtomicBoolean running,
                               List<String> uids, Integer singleBulkSize,
-                              Long delay, String json, String topic, int num, int factor) {
+                              Long delay, String json, String jsonSkip, String topic, int num, int factor) {
             producerId = "proxy-producer-" + num;
             this.factor = factor;
             this.running = running;
@@ -103,6 +107,7 @@ public class ProxyLdapProducer {
             this.singleBulkSize = singleBulkSize;
             this.delay = delay;
             this.json = json;
+            this.jsonSkip = jsonSkip;
             this.topic = topic;
 
             val c = EncryptionConfig.createFromSystemProp();
@@ -139,11 +144,21 @@ public class ProxyLdapProducer {
                     val r = new Random();
                     val v = counter.incrementAndGet();
                     IntStream.range(0, singleBulkSize).forEach(i -> {
-                        val userId = v % factor == 0 ? UUID.randomUUID().toString() : uids.get(r.nextInt(uids.size()));
-                        val j = json.replaceAll("%USER_ID%", userId)
-                                .replaceAll("%CORRELATION_ID%", UUID.randomUUID().toString())
-                                .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
-                        val record = new ProducerRecord<>(topic, userId, j);
+                        String sJson;
+                        String key;
+                        if (v % factor == 0) {
+                            key = UUID.randomUUID().toString();
+                            sJson = jsonSkip
+                                    .replaceAll("%CORRELATION_ID%", key)
+                                    .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
+                        } else {
+                            key = uids.get(r.nextInt(uids.size()));
+                            sJson = json.replaceAll("%USER_ID%", key)
+                                    .replaceAll("%CORRELATION_ID%", UUID.randomUUID().toString())
+                                    .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
+
+                        }
+                        val record = new ProducerRecord<>(topic, key, sJson);
                         sent.incrementAndGet();
                         jsonProducer.send(record);
                     });

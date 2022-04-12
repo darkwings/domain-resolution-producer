@@ -140,7 +140,7 @@ public class ProxySelectorProducer {
                     val r = new Random();
                     val v = counter.incrementAndGet();
                     IntStream.range(0, singleBulkSize).forEach(i -> {
-                        val userId = v % factor == 0 ? UUID.randomUUID().toString() : uids.get(r.nextInt(uids.size()));
+                        val userId = v % factor == 0 ? "" : uids.get(r.nextInt(uids.size()));
                         val j = json.replaceAll("%USER_ID%", userId)
                                 .replaceAll("%TSTAMP%", Instant.now().toString())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());

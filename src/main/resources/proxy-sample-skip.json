@@ -1,0 +1,71 @@
+{
+  "logType": "proxy",
+  "skipEnrichments": "true",
+  "correlationId": "%CORRELATION_ID%",
+  "MCAFEE_PROXY": {
+    "application_name": "%APPLICATION_NAME%",
+    "reputation_level": "Minimal Risk",
+    "block_result": 0,
+    "virus_name": "",
+    "categories": [
+      "Search Engines"
+    ],
+    "hash": {
+      "sha256": " ",
+      "md5": ""
+    }
+  },
+  "SHIMMIA": {
+    "app": "Griffon-NavigazioneInternet",
+    "logtype": "STDAPPL",
+    "hostname": "telmcf007rm001",
+    "archivename": "Griffon-NavigazioneInternet.TELMCF007RM001.STDAPPL_BROWSING.L1.LINUX.AS.2022-03-19_00-23.9.-4.-4.0.tar.Z",
+    "internalname": "1...",
+    "timestamp": "2022-03-18_23-59",
+    "compressname": "Griffon-NavigazioneInternet.STDAPPL.12.3.telmcf007rm001.2022-03-18_23-59.BROWSING.log.gz"
+  },
+  "destination": {
+    "address": "13.107.6.158",
+    "bytes": "8366",
+    "ip": "13.107.6.158"
+  },
+  "source": {
+    "address": "10.141.132.183",
+    "bytes": "7746",
+    "ip": "10.141.132.183"
+  },
+  "message": "[18/Mar/2022:16:19:30 +0100] \"00918119\" 10.141.132.183 200 \"CONNECT business.bing.com:443 HTTP/1.1\" \"Search Engines\" \"Minimal Risk\" \"\" 8366 7746 \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39\" \"\" \"0\" \"\" \"\" \"13.107.6.158\" \" \"",
+  "url": {
+    "original": "business.bing.com:443",
+    "port": "443",
+    "domain": "business.bing.com"
+  },
+  "@timestamp": "2022-03-18T16:19:30.000+01:00",
+  "host": {
+    "name": "telmcf007rm001"
+  },
+  "http": {
+    "request": {
+      "method": "CONNECT"
+    },
+    "response": {
+      "status_code": 200,
+      "mime_type": ""
+    },
+    "version": "1.1"
+  },
+  "event": {
+    "created": "2022-03-19T06:34:59.150Z",
+    "kind": "event",
+    "category": "web",
+    "outcome": "success"
+  },
+  "user": {
+    "name": "",
+    "id": "",
+    "hash": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  },
+  "user_agent": {
+    "original": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39"
+  }
+}
