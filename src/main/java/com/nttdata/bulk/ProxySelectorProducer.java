@@ -54,6 +54,9 @@ public class ProxySelectorProducer {
         this.json = Resources.toString(url, Charset.defaultCharset());
         url = Resources.getResource("users-telecomitalia.txt");
         uids = Resources.readLines(url, Charset.defaultCharset());
+        IntStream.range(0, 1000).forEach(i -> {
+            uids.add("FAKE_"+ i);
+        });
         this.bootstrapServers = bootstrapServers;
     }
 

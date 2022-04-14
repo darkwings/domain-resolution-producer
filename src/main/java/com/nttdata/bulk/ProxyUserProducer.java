@@ -50,6 +50,9 @@ public class ProxyUserProducer {
 
         URL url = Resources.getResource("users-telecomitalia.txt");
         uids = Resources.readLines(url, Charset.defaultCharset());
+        IntStream.range(0, 1000).forEach(i -> {
+            uids.add("FAKE_"+ i);
+        });
 
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

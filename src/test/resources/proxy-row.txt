@@ -1,0 +1,1 @@
+[%TSTAMP%] "%USERID%" 10.141.1.131 200 "CONNECT www.ow7.rassegnestampa.it:443 HTTP/1.1" "General News" "Minimal Risk" "" 7428 733 "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 10.0; WOW64; Trident/7.0; Microsoft Outlook 16.0.13801)" "" "0" "" "" "212.239.48.243" " "
