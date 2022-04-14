@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
@@ -20,11 +21,11 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 
 public class ProxyLogGenerator {
 
-    private static final String PATH = "/Users/ETORRIFUT/work/proxy2.log";
-    private static final Integer HOW_MANY = 10000;
+    private static final String PATH = "/Users/ETORRIFUT/work/proxy3.log";
+    private static final Integer HOW_MANY = 110;
     private static final Integer FACTOR = 2;
 
-    private static final String PATTERN_FORMAT = "dd/MMM/yyyy:hh:mm:ss Z";
+    private static final String PATTERN_FORMAT = "dd/MMM/yyyy:HH:mm:ss Z";
 
     private List<String> uids;
 
@@ -39,11 +40,10 @@ public class ProxyLogGenerator {
 
     @SneakyThrows
     @Test
-    @Disabled
+    //@Disabled
     void doIt() {
 
-        val stream = new RandomAccessFile(PATH, "rw");
-        val channel = stream.getChannel();
+        val writer = new FileWriter(PATH);
 
         val url = Resources.getResource("proxy-row.txt");
         val row = Resources.toString(url, Charset.defaultCharset());
@@ -59,12 +59,11 @@ public class ProxyLogGenerator {
             val rowF = row.replaceAll("%TSTAMP%", formatter.format(now))
                     .replaceAll("%USERID%", uid);
             try {
-                stream.writeChars(rowF+"\n");
+                writer.write(rowF + "\n");
             } catch (IOException e) {
             }
         });
 
-        channel.close();
-        stream.close();
+        writer.close();
     }
 }
