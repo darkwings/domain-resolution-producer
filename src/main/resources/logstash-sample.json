@@ -1,11 +1,11 @@
 {
   "SHIMMIA": {
-    "hostname": "telmcf007rm001",
+    "hostname": "%HOSTNAME%",
     "timestamp": "2022-03-18_23-59",
     "internalname": "1...",
-    "compressname": "Griffon-NavigazioneInternet.STDAPPL.12.3.telmcf007rm001.2022-03-18_23-59.BROWSING.log.gz",
+    "compressname": "Griffon-NavigazioneInternet.STDAPPL.12.3.%HOSTNAME%.2022-03-18_23-59.BROWSING.log.gz",
     "app": "Griffon-NavigazioneInternet",
-    "archivename": "Griffon-NavigazioneInternet.TELMCF007RM001.STDAPPL_BROWSING.L1.LINUX.AS.2022-03-19_00-23.9.-4.-4.0.tar.Z",
+    "archivename": "Griffon-NavigazioneInternet.%HOSTNAME_UC%.STDAPPL_BROWSING.L1.LINUX.AS.2022-03-19_00-23.9.-4.-4.0.tar.Z",
     "logtype": "STDAPPL"
   },
   "event": {
@@ -35,7 +35,7 @@
   },
   "user": {
     "name": "%USER_ID%",
-    "hash": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    "hash": "%USER_HASH%",
     "id": "%USER_ID%"
   },
   "source": {
@@ -64,7 +64,7 @@
     "original": "business.bing.com:443"
   },
   "host": {
-    "name": "telmcf007rm001"
+    "name": "%HOSTNAME%"
   },
   "headers": {
     "content_type": "application/json",

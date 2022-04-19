@@ -4,12 +4,11 @@ import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -22,7 +21,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 public class ProxyLogGenerator {
 
     private static final String PATH = "/Users/ETORRIFUT/work/proxy3.log";
-    private static final Integer HOW_MANY = 110;
+    private static final Integer HOW_MANY = 4;
     private static final Integer FACTOR = 2;
 
     private static final String PATTERN_FORMAT = "dd/MMM/yyyy:HH:mm:ss Z";
@@ -43,7 +42,8 @@ public class ProxyLogGenerator {
     //@Disabled
     void doIt() {
 
-        val writer = new FileWriter(PATH);
+        val writer = new BufferedWriter(
+                new FileWriter(PATH, true));
 
         val url = Resources.getResource("proxy-row.txt");
         val row = Resources.toString(url, Charset.defaultCharset());

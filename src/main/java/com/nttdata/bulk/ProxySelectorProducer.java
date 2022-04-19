@@ -65,7 +65,8 @@ public class ProxySelectorProducer {
                            @PathVariable("howMany") int howMany,
                            @PathVariable("period") long period,
                            @PathVariable("n") int n,
-                           @RequestParam(value = "factor", defaultValue = "2") int factor) {
+                           @RequestParam(value = "factor", defaultValue = "2") int factor,
+                           @RequestParam(value = "hostname", defaultValue = "telmcf007rm991") String hostname) {
         if (runningLoop.get()) {
             return "ALREADY RUNNING\n";
         }
@@ -74,7 +75,7 @@ public class ProxySelectorProducer {
 
         IntStream.range(0, n)
                 .forEach(i -> service.submit(new SingleProducer(bootstrapServers,
-                        runningLoop, uids, howMany, period, json, topic, i, factor)));
+                        runningLoop, uids, howMany, period, json, topic, i, factor, hostname)));
         return "OK\n";
     }
 
@@ -94,12 +95,13 @@ public class ProxySelectorProducer {
         String json;
         String topic;
         String producerId;
+        String hostname;
 
         int factor;
 
         public SingleProducer(String bootstrapServers, AtomicBoolean running,
                               List<String> uids, Integer singleBulkSize,
-                              Long delay, String json, String topic, int num, int factor) {
+                              Long delay, String json, String topic, int num, int factor, String hostname) {
             producerId = "proxy-producer-" + num;
             this.running = running;
             this.uids = uids;
@@ -108,6 +110,7 @@ public class ProxySelectorProducer {
             this.json = json;
             this.topic = topic;
             this.factor = factor;
+            this.hostname = hostname;
 
             val c = EncryptionConfig.createFromSystemProp();
 
@@ -145,7 +148,10 @@ public class ProxySelectorProducer {
                     IntStream.range(0, singleBulkSize).forEach(i -> {
                         val userId = v % factor == 0 ? "" : uids.get(r.nextInt(uids.size()));
                         val j = json.replaceAll("%USER_ID%", userId)
+                                .replaceAll("%USER_HASH%", Integer.toString(userId.hashCode()))
                                 .replaceAll("%TSTAMP%", Instant.now().toString())
+                                .replaceAll("%HOSTNAME%", hostname)
+                                .replaceAll("%HOSTNAME_UC%", hostname.toUpperCase())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
                         val record = new ProducerRecord<>(topic, userId, j);
                         sent.incrementAndGet();
