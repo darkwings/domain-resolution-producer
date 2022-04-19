@@ -63,7 +63,9 @@
     "domain": "business.bing.com",
     "original": "business.bing.com:443"
   },
-  "host": "0:0:0:0:0:0:0:1",
+  "host": {
+    "name": "telmcf007rm001"
+  },
   "headers": {
     "content_type": "application/json",
     "http_accept": "*/*",
