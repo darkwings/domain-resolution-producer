@@ -22,13 +22,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
@@ -47,6 +44,8 @@ public class ProxySelectorProducer {
 
     private final ExecutorService service = Executors.newFixedThreadPool(10);
     private final AtomicBoolean runningLoop = new AtomicBoolean(false);
+
+    private ProductionMonitor monitor = new ProductionMonitor("Selector simulator");
 
     @SneakyThrows
     public ProxySelectorProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
@@ -72,16 +71,18 @@ public class ProxySelectorProducer {
         }
 
         runningLoop.set(true);
-
+        monitor.start();
         IntStream.range(0, n)
                 .forEach(i -> service.submit(new SingleProducer(bootstrapServers,
-                        runningLoop, uids, howMany, period, json, topic, i, factor, hostname)));
+                        runningLoop, uids, howMany, period, json, topic, i, factor, hostname,
+                        monitor)));
         return "OK\n";
     }
 
     @PostMapping("/bulk/proxy/selector/_stop")
     public String stopLoop() {
         runningLoop.set(false);
+        monitor.stop();
         return "STOPPED\n";
     }
 
@@ -99,9 +100,12 @@ public class ProxySelectorProducer {
 
         int factor;
 
+        ProductionMonitor monitor;
+
         public SingleProducer(String bootstrapServers, AtomicBoolean running,
                               List<String> uids, Integer singleBulkSize,
-                              Long delay, String json, String topic, int num, int factor, String hostname) {
+                              Long delay, String json, String topic, int num, int factor,
+                              String hostname, ProductionMonitor monitor) {
             producerId = "proxy-producer-" + num;
             this.running = running;
             this.uids = uids;
@@ -111,6 +115,7 @@ public class ProxySelectorProducer {
             this.topic = topic;
             this.factor = factor;
             this.hostname = hostname;
+            this.monitor = monitor;
 
             val c = EncryptionConfig.createFromSystemProp();
 
@@ -131,16 +136,7 @@ public class ProxySelectorProducer {
         @Override
         public void run() {
             AtomicLong counter = new AtomicLong(0);
-            Timer timer = new Timer();
-            AtomicInteger sent = new AtomicInteger(0);
-            log.info("Producer {} is starting", producerId);
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    log.info("Producer {} sent {} message per sec", producerId, sent.get());
-                    sent.set(0);
-                }
-            }, 1000L, 1000L);
+            log.info("Producer {} is starting - running {}", producerId, running);
             try {
                 while (running.get()) {
                     val r = new Random();
@@ -154,7 +150,7 @@ public class ProxySelectorProducer {
                                 .replaceAll("%HOSTNAME_UC%", hostname.toUpperCase())
                                 .replaceAll("%APPLICATION_NAME%", UUID.randomUUID().toString());
                         val record = new ProducerRecord<>(topic, userId, j);
-                        sent.incrementAndGet();
+                        monitor.increment();
                         jsonProducer.send(record);
                     });
                     Thread.sleep(delay);
@@ -163,7 +159,6 @@ public class ProxySelectorProducer {
                 log.error("Failed to publish", e);
             } finally {
                 jsonProducer.close();
-                timer.cancel();
             }
             log.info("Producer {} is exiting", producerId);
         }

@@ -48,6 +48,8 @@ public class ProxyLdapProducer {
     private final ExecutorService service = Executors.newFixedThreadPool(10);
     private final AtomicBoolean runningLoop = new AtomicBoolean(false);
 
+    private ProductionMonitor monitor = new ProductionMonitor("LDAP simulator");
+
     @SneakyThrows
     public ProxyLdapProducer(@Value("${bootstrap.servers}") String bootstrapServers) {
         URL url = Resources.getResource("proxy-sample.json");
@@ -70,16 +72,18 @@ public class ProxyLdapProducer {
         }
 
         runningLoop.set(true);
+        monitor.start();
 
         IntStream.range(0, n)
                 .forEach(i -> service.submit(new SingleProducer(bootstrapServers,
-                        runningLoop, uids, howMany, period, json, jsonSkip, topic, i, factor)));
+                        runningLoop, uids, howMany, period, json, jsonSkip, topic, i, factor, monitor)));
         return "OK\n";
     }
 
     @PostMapping("/bulk/proxy/ldap/_stop")
     public String stopLoop() {
         runningLoop.set(false);
+        monitor.stop();
         return "STOPPED\n";
     }
 
@@ -97,9 +101,12 @@ public class ProxyLdapProducer {
 
         int factor;
 
+        ProductionMonitor monitor;
+
         public SingleProducer(String bootstrapServers, AtomicBoolean running,
                               List<String> uids, Integer singleBulkSize,
-                              Long delay, String json, String jsonSkip, String topic, int num, int factor) {
+                              Long delay, String json, String jsonSkip, String topic, int num, int factor,
+                              ProductionMonitor monitor) {
             producerId = "proxy-producer-" + num;
             this.factor = factor;
             this.running = running;
@@ -109,6 +116,7 @@ public class ProxyLdapProducer {
             this.json = json;
             this.jsonSkip = jsonSkip;
             this.topic = topic;
+            this.monitor = monitor;
 
             val c = EncryptionConfig.createFromSystemProp();
 
@@ -129,16 +137,8 @@ public class ProxyLdapProducer {
         @Override
         public void run() {
             AtomicLong counter = new AtomicLong(0);
-            Timer timer = new Timer();
-            AtomicInteger sent = new AtomicInteger(0);
-            log.info("Producer {} is starting", producerId);
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    log.info("Producer {} sent {} message per sec", producerId, sent.get());
-                    sent.set(0);
-                }
-            }, 1000L, 1000L);
+            log.info("Producer {} is starting - running {}", producerId, running);
+            monitor.start();
             try {
                 while (running.get()) {
                     val r = new Random();
@@ -159,7 +159,7 @@ public class ProxyLdapProducer {
 
                         }
                         val record = new ProducerRecord<>(topic, key, sJson);
-                        sent.incrementAndGet();
+                        monitor.increment();
                         jsonProducer.send(record);
                     });
                     Thread.sleep(delay);
@@ -168,7 +168,6 @@ public class ProxyLdapProducer {
                 log.error("Failed to publish", e);
             } finally {
                 jsonProducer.close();
-                timer.cancel();
             }
             log.info("Producer {} is exiting", producerId);
         }
