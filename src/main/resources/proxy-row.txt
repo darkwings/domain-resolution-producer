@@ -1,0 +1,1 @@
+[%TSTAMP%] "%USERID%" 10.11.16.93 200 "GET elitenz6sed4v8ml3euqrdcudxu8k1644274615.nuid.imrworldwide.com:443?a=b HTTP/1.1" "Internet Services" "Minimal Risk" "" 6479 1212 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36" "" "0" "" "" "143.204.98.89" " "

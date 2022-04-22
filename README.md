@@ -72,3 +72,12 @@ To produce 900.000 mess/min (54.000.000 mess/h, 15.000 mess/sec)
 
     curl -X POST http://localhost:8080/bulk/activity/cmpny_activity/15/10
 
+
+## PROXY LOG
+
+    curl -X POST http://localhost:8080/bulk/proxy/generate -H 'Content-type: application/json' -d '{
+        "hostname":"TEST1080",
+        "basePath":"/Users/ETORRIFUT/work/logs",
+        "factor":2,
+        "howMany":500000
+    }'
